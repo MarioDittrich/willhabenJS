@@ -419,6 +419,10 @@ input:focus, textarea:focus, select:focus {
             addToggleButton();
             addMapsButton();
         });
+        observeDOM('[aria-label="Meine Nachrichten"]', () => {
+            addToggleButton();
+            addMapsButton();
+        });
 
         // Existing ad removal and carousel code
         const adStyleTag = document.createElement('style');
