@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Willhaben Dark Mode
 // @namespace    http://tampermonkey.net/
-// @version      2025-01-24
+// @version      2025-01-28
 // @description  Makes willhaben.at in Dark Mode (can be toggled on and off) and removes the ad on top completely!
 // @author       Mario Dittrich
 // @match        https://www.willhaben.at/*
@@ -415,14 +415,11 @@ input:focus, textarea:focus, select:focus {
         addMapsButton();
 
         // Set up permanent observer
-        observeDOM('[aria-label="Neue Anzeige aufgeben"]', () => {
+        observeDOM('[data-testid="menu-vertical-id-1"]', () => {
             addToggleButton();
             addMapsButton();
         });
-        observeDOM('[aria-label="Meine Nachrichten"]', () => {
-            addToggleButton();
-            addMapsButton();
-        });
+
 
         // Existing ad removal and carousel code
         const adStyleTag = document.createElement('style');
