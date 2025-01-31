@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Willhaben Dark Mode
 // @namespace    http://tampermonkey.net/
-// @version      2025-01-28
+// @version      2025-01-31
 // @description  Makes willhaben.at in Dark Mode (can be toggled on and off) and removes the ad on top completely!
 // @author       Mario Dittrich
 // @match        https://www.willhaben.at/*
