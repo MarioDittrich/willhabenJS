@@ -361,32 +361,29 @@ input:focus, textarea:focus, select:focus {
         document.addEventListener('keydown', handleKeyDown, true);
     };
 
-    const addMapsButton = () => {
-        // More reliable container selector
-        const targetContainer = document.querySelector(`
-        [data-testid="ad-detail-contact-box-private-top"]
-        div.Box-sc-wfmb7k-0:has(button[data-testid="contact-box-contact-button"])
-    `);
+   const addMapsButton = () => {
+    // Find the main container
+    const outerContainer = document.querySelector('.Box-sc-wfmb7k-0.bmpCof');
+    // Find address box in any type of ad
+    const addressBox = document.querySelector('[data-testid="top-contact-box-address-box"]');
 
-        const addressBox = document.querySelector('[data-testid="top-contact-box-address-box"]');
+    if (!outerContainer || !addressBox) return;
 
-        if (!targetContainer || !addressBox) return;
-
-        // Get address parts remains the same
-        const addressParts = Array.from(addressBox.querySelectorAll('span.Text-sc-10o2fdq-0.eoAJht'))
+    // Get address parts
+    const addressParts = Array.from(addressBox.querySelectorAll('span.Text-sc-10o2fdq-0.eoAJht'))
         .map(span => span.textContent.trim())
         .filter(text => text.length > 0);
-        const fullAddress = addressParts.join(', ');
+    if (addressParts.length === 0) return;
 
-        // Check if button already exists
-        if (targetContainer.querySelector('[data-testid="wh-maps-button"]')) return;
+    // Check if button already exists
+    if (outerContainer.querySelector('[data-testid="wh-maps-button"]')) return;
 
-        // Create maps button with data-testid
-        const mapsButton = document.createElement('button');
-        mapsButton.dataset.testid = "wh-maps-button";
-        mapsButton.className = 'Button__ButtonContainer-sc-3uaafx-0 jwEQZe sc-c2a3d8b3-0 bKRmFV';
-        mapsButton.type = 'button';
-        mapsButton.innerHTML = `
+    // Create maps button
+    const mapsButton = document.createElement('button');
+    mapsButton.dataset.testid = "wh-maps-button";
+    mapsButton.className = 'Button__ButtonContainer-sc-3uaafx-0 jwEQZe sc-c2a3d8b3-0 bKRmFV';
+    mapsButton.type = 'button';
+    mapsButton.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
              class="createSvgIcon__SvgIcon-sc-1vebdtk-0 fVhrnv" pointer-events="none">
             <path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
@@ -394,20 +391,22 @@ input:focus, textarea:focus, select:focus {
         Auf Karte anzeigen
     `;
 
-        // Click handler remains the same
-        mapsButton.addEventListener('click', () => {
-            const encodedAddress = encodeURIComponent(fullAddress);
-            window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
-        });
+    // Add click handler
+    mapsButton.addEventListener('click', () => {
+        const encodedAddress = encodeURIComponent(addressParts.join(', '));
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+    });
 
-        // Insert before "Privatperson" text
-        const privatpersonText = targetContainer.querySelector('div.Box-sc-wfmb7k-0 fQgslH');
-        if (privatpersonText) {
-            targetContainer.insertBefore(mapsButton, privatpersonText);
-        } else {
-            targetContainer.appendChild(mapsButton);
-        }
-    };
+    const buttonWrapper = document.createElement('div');
+    buttonWrapper.style.display = 'flex';
+    buttonWrapper.style.justifyContent = 'center';
+    buttonWrapper.style.width = '100%';
+    buttonWrapper.style.padding = '10px 0'; // Add some vertical spacing
+    buttonWrapper.appendChild(mapsButton);
+
+    // Insert as LAST element in the outer container
+    outerContainer.appendChild(buttonWrapper);
+};
 
     const initialize = () => {
         // Run immediately
